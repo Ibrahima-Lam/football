@@ -1,0 +1,25 @@
+CREATE VIEW tournoi as SELECT * from edition natural join competition   ;
+
+
+CREATE VIEW team as SELECT * from participant p natural join equipe join tournoi t on p.idEdition=t.codeEdition ;
+
+CREATE VIEW regroupement  as SELECT * from participation  natural join groupe natural join team   ;
+
+CREATE VIEW game_play as select g.homeGame as idHome,g.awayGame as idAway,g.dateGame,g.stadeGame,g.heureGame,g.idGame,g.idGroupe,
+h.nomEquipe as home,a.nomEquipe as away,homeScore,awayScore,gr.nomGroupe,gr.codeEdition,c.anneeEdition,
+gr.codePhase,g.codeNiveau,n.nomNiveau,p.nomPhase,p.typePhase,homeScorePenalty,awayScorePenalty
+  from game g NATURAL left JOIN score join team h on g.homeGame=h.idParticipant 
+join team a on g.awayGame=a.idParticipant join groupe gr on g.idGroupe=gr.idGroupe 
+join tournoi c on gr.codeEdition= c.codeEdition  join niveau n on g.codeNiveau=n.codeNiveau 
+join  phase p on gr.codePhase=p.codePhase natural left join tiraubut ;
+
+
+create view goal as select  p.idJoueur, p.nomJoueur,t.nomEquipe as team,t.idParticipant as idTeam,p.idParticipant,
+p.nomEquipe,idGame,homeGame,awayGame,dateGame,minute,idBut ,gr.codeEdition,codeMarque,nomMarque,typeMarque
+ from but b natural join player p natural join game 
+ join team t on t.idParticipant=b.numParticipant NATURAL join groupe gr NATURAL LEFT join marque;
+
+CREATE VIEW player as select * from joueur NATURAL join team natural join groupe
+
+ CREATE VIEW player_sanction as SELECT * from sanctionner natural join player natural join sanction natural join groupe NATURAL join game
+ natural left join suspension;
